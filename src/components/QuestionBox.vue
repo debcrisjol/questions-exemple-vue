@@ -14,7 +14,7 @@
      v-for="(answer, index ) in answers"
       :key="index"
       @click="selectedAnswer(index)"
-      :class="[selectedIndex === index ? 'selected': '']"> {{ answer}}
+      :class="answerClass(index) "> {{ answer}}
     </button>
     </div>
 
@@ -43,9 +43,9 @@ export default{
     data(){
         return{
             selectedIndex: null,
-            shuffledAnswers: [],
             correctIndex: null,
-            answered: false
+            answered: false,
+            shuffledAnswers: []
         }
     },
     computed:{
@@ -69,8 +69,9 @@ export default{
        this.selectedIndex = index
         },
         shuffleAnswers(){
-            let answers = [...this.currentQuestion.incorrect_answers,this.currentQuestion.correct_answer]
+            let answers = [...this.currentQuestion.incorrect_answers, this.currentQuestion.correct_answer]
            this.shuffledAnswers = _.shuffle(answers)
+           this.correctIndex = this.shuffledAnswers.indexOf(this.currentQuestion.correct_answer)
         },
         submitAnswer(){
             let isCorrect = false
@@ -79,6 +80,18 @@ export default{
             }
             this.answered= true
             this.increment(isCorrect)
+        },
+        answerClass(index){
+           let answerClass=''
+           if( !this.answered && this.selectedIndex === index ){
+            answerClass = 'selected'
+           } else if( this.answered && this.correctIndex === index){
+            answerClass ='correct'
+           } else if (this.answered && this.selectedIndex ===index && this.correctIndex !== index){
+            answerClass= 'incorrect'
+           }
+         return answerClass
+
         }
     }
 }
