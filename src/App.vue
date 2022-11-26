@@ -1,6 +1,8 @@
 <template>
   <div id="app">
-   <HeaderBox />
+   <HeaderBox
+   :numCorrect="numCorrect"
+   :numTotal="numTotal" />
 
    <div class="container text-center">
   <div class="row">
@@ -9,7 +11,7 @@
       v-if= "questions.length"
       :currentQuestion= "questions[index]"
       :next= "next"
-       :key= "index" />
+       :increment="increment" />
     </div>
   </div>
 </div>
@@ -30,11 +32,19 @@ export default {
   },
   data(){return{
    questions:[],
-   index:0
+   index:0,
+   numCorrect :0,
+   numTotal:0
   }},
  methods:{
   next(){
     this.index++
+  },
+  increment(isCorrect){
+    if (isCorrect){
+   this.numCorrect++
+    }
+    this.numTotal++
   }
  },
   mounted: function(){
